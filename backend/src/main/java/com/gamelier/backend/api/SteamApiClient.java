@@ -18,7 +18,12 @@ public class SteamApiClient {
     @Value("${steam.api-key}")
     private String apiKey;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public SteamApiClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
 
     public SteamProfileDto fetchSteamProfile(String steamId) {
         try {
