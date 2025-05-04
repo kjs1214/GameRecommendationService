@@ -1,5 +1,6 @@
 package com.gamelier.backend.controller;
 
+import com.gamelier.backend.service.SteamGameService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,12 @@ import java.util.Map;
 @RequestMapping("/login/steam")
 public class SteamLoginController {
 
+    private final SteamGameService steamGameService;
+
+    public SteamLoginController(SteamGameService steamGameService) {
+        this.steamGameService = steamGameService;
+    }
+
     @GetMapping
     public void redirectToSteam(HttpServletResponse response) throws IOException {
         String redirectUrl = UriComponentsBuilder
@@ -31,15 +38,17 @@ public class SteamLoginController {
         response.sendRedirect(redirectUrl);
     }
 
-    // 2. Steam 로그인 후 callback 처리
     @GetMapping("/callback")
     public RedirectView steamCallback(@RequestParam Map<String, String> params, HttpSession session) {
         String claimedId = params.get("openid.claimed_id");
         if (claimedId != null) {
             String steamId = claimedId.substring(claimedId.lastIndexOf("/") + 1);
             session.setAttribute("steamId", steamId);
-        }
-        return new RedirectView("/api/steam/user/me"); // 또는 프론트엔드 주소
-    }
 
+            // 보유 게임 데이터 저장
+            steamGameService.fetchAndSaveOwnedGames(steamId);
+        }
+
+        return new RedirectView("/api/steam/user/me");
+    }
 }

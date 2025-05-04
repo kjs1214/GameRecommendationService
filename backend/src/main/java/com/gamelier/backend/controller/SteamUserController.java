@@ -1,6 +1,9 @@
 package com.gamelier.backend.controller;
 
 import com.gamelier.backend.dto.SteamProfileDto;
+import com.gamelier.backend.entity.GameGenre;
+import com.gamelier.backend.entity.OwnedGame;
+import com.gamelier.backend.repository.GameGenreRepository;
 import com.gamelier.backend.service.SteamUserService;
 import com.gamelier.backend.service.SteamGameService;
 import jakarta.servlet.http.HttpSession;
@@ -8,17 +11,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/steam/user")
 public class SteamUserController {
 
     private final SteamUserService steamUserService;
     private final SteamGameService steamGameService;
+    private final GameGenreRepository genreRepository;
 
-
-    public SteamUserController(SteamUserService steamUserService, SteamGameService steamGameService) {
+    public SteamUserController(SteamUserService steamUserService, SteamGameService steamGameService, GameGenreRepository genreRepository) {
         this.steamUserService = steamUserService;
         this.steamGameService = steamGameService;
+        this.genreRepository = genreRepository;
     }
 
 
@@ -43,13 +51,39 @@ public class SteamUserController {
         return ResponseEntity.ok(profile);
     }
 
-    @GetMapping("/me/games")
-    public ResponseEntity<?> getOwnedGames(HttpSession session) {
+
+    @GetMapping("/me/games/sync")
+    public ResponseEntity<?> syncOwnedGames(HttpSession session) {
         String steamId = (String) session.getAttribute("steamId");
         if (steamId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
-        return ResponseEntity.ok(steamGameService.getOwnedGames(steamId));
+
+        var saved = steamGameService.fetchAndSaveOwnedGames(steamId);
+        return ResponseEntity.ok(saved);
+    }
+
+    @GetMapping("/me/games")
+    public ResponseEntity<?> getStoredGames(HttpSession session) {
+        String steamId = (String) session.getAttribute("steamId");
+        if (steamId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        List<OwnedGame> games = steamGameService.getStoredGames(steamId);
+        List<Map<String, Object>> withGenres = games.stream().map(game -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("appid", game.getAppid());
+            map.put("name", game.getName());
+            map.put("playtimeForever", game.getPlaytimeForever());
+            map.put("iconUrl", game.getIconUrl());
+            List<String> genres = genreRepository.findByAppid(game.getAppid())
+                    .stream().map(GameGenre::getGenre).toList();
+            map.put("genres", genres);
+            return map;
+        }).toList();
+
+        return ResponseEntity.ok(withGenres);
     }
 
     @GetMapping("/me/recent-games")
@@ -58,6 +92,7 @@ public class SteamUserController {
         if (steamId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
+
         return ResponseEntity.ok(steamGameService.getRecentlyPlayedGames(steamId));
     }
 }

@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchOwnedGames, fetchProfile, fetchRecentGames } from "../api/steam";
 import { OwnedGame, SteamProfile } from "../types/Steam";
+import GenreDonutChart from "./GenreDonutChart";
 
 export default function ProfileSummaryCard() {
     const [profile, setProfile] = useState<SteamProfile | null>(null);
@@ -42,7 +43,19 @@ export default function ProfileSummaryCard() {
             .catch((err) => {
                 console.error("❌ 최근 게임 불러오기 실패:", err);
             });
+
     }, []);
+
+    const genreStats = useMemo(() => {
+        const map = new Map<string, number>();
+        games.forEach((g: any) => {
+            const genres = g.genres || [];
+            genres.forEach((genre: string) => {
+                map.set(genre, (map.get(genre) || 0) + 1);
+            });
+        });
+        return Array.from(map.entries()).map(([name, value]) => ({ name, value }));
+    }, [games]);
 
     if (!profile) return <p>불러오는 중...</p>;
 
@@ -62,6 +75,9 @@ export default function ProfileSummaryCard() {
             <a href={profile.profileurl} target="_blank" rel="noreferrer">
                 Steam 프로필 보기
             </a>
+
+            <h3 style={{ marginTop: "1rem" }}>🎯 장르 통계</h3>
+            <GenreDonutChart data={genreStats} />
         </div>
     );
 }

@@ -10,6 +10,7 @@ export type OwnedGame = {
     name: string;
     playtimeForever: number;
     iconUrl: string;
+    genre: string[];
 };
 
 export type RecentlyPlayedGame = {
