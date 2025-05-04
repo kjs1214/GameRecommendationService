@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { fetchSteamProfile } from "./api/steam";
+
+type SteamProfile = {
+  steamid: string;
+  personaname: string;
+  avatar: string;
+  profileurl: string;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [profile, setProfile] = useState<SteamProfile | null>(null);
+
+  useEffect(() => {
+    fetchSteamProfile()
+      .then(setProfile)
+      .catch(() => setProfile(null));
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Steam 사용자 정보</h1>
+      {profile ? (
+        <div>
+          <img src={profile.avatar} alt="avatar" />
+          <p>{profile.personaname}</p>
+          <a href={profile.profileurl} target="_blank" rel="noreferrer">
+            Steam 프로필로 이동
+          </a>
+        </div>
+      ) : (
+        <p>로그인된 사용자가 없습니다.</p>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
