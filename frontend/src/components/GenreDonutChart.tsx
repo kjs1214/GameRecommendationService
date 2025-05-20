@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 interface GenreData {
     name: string;
@@ -48,7 +48,7 @@ export default function GenreDonutChart({ data }: Props) {
                     isAnimationActive={false}
                     stroke="none"
                 >
-                    {finalData.map((entry, index) => (
+                    {finalData.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} radius={10} />
                     ))}
                 </Pie>
