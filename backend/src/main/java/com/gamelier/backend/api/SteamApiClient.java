@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 public class SteamApiClient {
-
+    // test
     @Value("${steam.api-key}")
     private String apiKey;
 
@@ -23,7 +23,6 @@ public class SteamApiClient {
     public SteamApiClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
 
     public SteamProfileDto fetchSteamProfile(String steamId) {
         try {
@@ -40,8 +39,7 @@ public class SteamApiClient {
                         (String) data.get("steamid"),
                         (String) data.get("personaname"),
                         (String) data.get("avatar"),
-                        (String) data.get("profileurl")
-                );
+                        (String) data.get("profileurl"));
             }
 
         } catch (Exception e) {
@@ -59,7 +57,8 @@ public class SteamApiClient {
         Map<?, ?> responseData = (Map<?, ?>) response.get("response");
         List<Map<String, Object>> games = (List<Map<String, Object>>) responseData.get("games");
 
-        if (games == null) return Collections.emptyList();
+        if (games == null)
+            return Collections.emptyList();
 
         List<SteamOwnedGameDto> result = new ArrayList<>();
         for (Map<String, Object> game : games) {
@@ -67,7 +66,8 @@ public class SteamApiClient {
             String name = (String) game.get("name");
             int playtime = (Integer) game.getOrDefault("playtime_forever", 0);
             String iconHash = (String) game.get("img_icon_url");
-            String iconUrl = String.format("https://media.steampowered.com/steamcommunity/public/images/apps/%d/%s.jpg", appid, iconHash);
+            String iconUrl = String.format("https://media.steampowered.com/steamcommunity/public/images/apps/%d/%s.jpg",
+                    appid, iconHash);
             result.add(new SteamOwnedGameDto(appid, name, playtime, iconUrl));
         }
         return result;
@@ -81,7 +81,8 @@ public class SteamApiClient {
         Map<?, ?> responseData = (Map<?, ?>) response.get("response");
         List<Map<String, Object>> games = (List<Map<String, Object>>) responseData.get("games");
 
-        if (games == null) return Collections.emptyList();
+        if (games == null)
+            return Collections.emptyList();
 
         List<SteamRecentlyPlayedGameDto> result = new ArrayList<>();
         for (Map<String, Object> game : games) {
@@ -90,7 +91,8 @@ public class SteamApiClient {
             int playtime2Weeks = (Integer) game.getOrDefault("playtime_2weeks", 0);
             int playtimeForever = (Integer) game.getOrDefault("playtime_forever", 0);
             String iconHash = (String) game.get("img_icon_url");
-            String iconUrl = String.format("https://media.steampowered.com/steamcommunity/public/images/apps/%d/%s.jpg", appid, iconHash);
+            String iconUrl = String.format("https://media.steampowered.com/steamcommunity/public/images/apps/%d/%s.jpg",
+                    appid, iconHash);
             result.add(new SteamRecentlyPlayedGameDto(appid, name, playtime2Weeks, playtimeForever, iconUrl));
         }
         return result;
