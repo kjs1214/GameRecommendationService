@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from "recharts";
 
 interface GenreData {
     name: string;
@@ -9,9 +9,22 @@ interface Props {
     data: GenreData[];
 }
 
-const COLORS = [
-    "#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1", "#a4de6c", "#d0ed57", "#d84a4a"
-];
+const COLORS = ["#00C49F", "#FF8042", "#00BFFF", "#00A4D3", "#FFBB28", "#FF6666", "#8884d8"];
+
+const RADIAN = Math.PI / 180;
+
+// 외부 라벨 커스터마이저
+const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index, name }: any) => {
+    const radius = outerRadius + 20;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+        <text x={x} y={y} fill={COLORS[index % COLORS.length]} textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={14}>
+            {`${name} ${Math.round(percent * 100)}%`}
+        </text>
+    );
+};
 
 export default function GenreDonutChart({ data }: Props) {
     const sorted = [...data].sort((a, b) => b.value - a.value);
@@ -20,25 +33,25 @@ export default function GenreDonutChart({ data }: Props) {
     const finalData = etcValue > 0 ? [...top, { name: "기타", value: etcValue }] : top;
 
     return (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width={300} height={300}>
             <PieChart>
                 <Pie
                     data={finalData}
+                    dataKey="value"
                     cx="50%"
                     cy="50%"
                     innerRadius={70}
                     outerRadius={100}
-                    fill="#8884d8"
-                    paddingAngle={2}
-                    dataKey="value"
-                    nameKey="name"
+                    paddingAngle={5}
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    isAnimationActive={false}
+                    stroke="none"
                 >
                     {finalData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} radius={10} />
                     ))}
                 </Pie>
-                <Tooltip />
-                <Legend layout="horizontal" verticalAlign="bottom" align="center" />
             </PieChart>
         </ResponsiveContainer>
     );
