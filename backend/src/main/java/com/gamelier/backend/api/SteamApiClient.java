@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 public class SteamApiClient {
-    // test
+    // tes
     @Value("${steam.api-key}")
     private String apiKey;
 
