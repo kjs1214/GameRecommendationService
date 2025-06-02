@@ -28,9 +28,14 @@ jobs:
       - name: Install dependencies
         run: |
           cd frontend
-          npm install
+          npm ci
 
-      - name: Build
+      - name: Fix vite permission (optional)
+        run: chmod +x ./node_modules/.bin/vite
+        working-directory: frontend
+
+      - name: Build frontend
         run: |
           cd frontend
-          npm run build
+          npx tsc -b && npx vite build
+    
