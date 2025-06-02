@@ -21,6 +21,10 @@ lerna-debug.log*
 # ─────────────────────────────────────
 /.gradle/
 build/
+# Gradle build output and compiled class files
+**/build/
+*.class
+
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
