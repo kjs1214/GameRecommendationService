@@ -1,6 +1,8 @@
 package com.gamelier.backend.controller;
 
 import com.gamelier.backend.service.SteamGameService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -13,19 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
-import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/login/steam")
@@ -38,7 +34,6 @@ public class SteamLoginController {
         this.steamGameService = steamGameService;
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
     }
-
 
     @GetMapping
     public ResponseEntity<Void> redirectToSteam() {
@@ -55,7 +50,7 @@ public class SteamLoginController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectUrl));
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 리디렉션
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @GetMapping("/callback")
@@ -72,10 +67,10 @@ public class SteamLoginController {
                     .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
 
-            // 보유 게임 저장
+            // 게임 데이터 저장
             steamGameService.fetchAndSaveOwnedGames(steamId);
 
-            // 프론트엔드로 리다이렉트하면서 토큰 전달
+            // 프론트엔드로 리다이렉트 (token은 URL에 전달됨)
             return new RedirectView("http://localhost:5173/login/success?token=" + token);
         }
 
