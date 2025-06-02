@@ -8,6 +8,7 @@ import com.gamelier.backend.entity.GameGenre;
 import com.gamelier.backend.entity.OwnedGame;
 import com.gamelier.backend.repository.GameGenreRepository;
 import com.gamelier.backend.repository.OwnedGameRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class SteamGameService {
         this.metadataClient = metadataClient;
     }
 
+    @Transactional
     public List<OwnedGame> fetchAndSaveOwnedGames(String steamId) {
         List<SteamOwnedGameDto> games = steamApiClient.fetchOwnedGames(steamId);
         ownedGameRepository.deleteBySteamId(steamId);
