@@ -66,3 +66,8 @@ frontend/node_modules/
 frontend/dist/
 frontend/dist-ssr/
 frontend/*.local
+
+# IntelliJ IDEA
+.idea/           # 루트 .idea
+**/.idea/        # 하위 디렉토리 내 .idea (예: backend/.idea/, frontend/.idea/)
+*.iml
