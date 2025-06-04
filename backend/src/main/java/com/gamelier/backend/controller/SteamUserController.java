@@ -6,11 +6,15 @@ import com.gamelier.backend.entity.OwnedGame;
 import com.gamelier.backend.repository.GameGenreRepository;
 import com.gamelier.backend.service.SteamUserService;
 import com.gamelier.backend.service.SteamGameService;
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Value;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,4 +96,5 @@ public class SteamUserController {
 
         return ResponseEntity.ok(steamGameService.getRecentlyPlayedGames(steamId));
     }
+
 }

@@ -10,6 +10,9 @@ import com.gamelier.backend.repository.GameGenreRepository;
 import com.gamelier.backend.repository.OwnedGameRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -58,8 +61,44 @@ public class SteamGameService {
 
 
     public List<OwnedGame> getStoredGames(String steamId) {
-        return ownedGameRepository.findBySteamId(steamId);
+        List<OwnedGame> existing = ownedGameRepository.findBySteamId(steamId);
+
+        // 1시간 이내 데이터가 있으면 캐시로 간주
+        if (!existing.isEmpty()) {
+            LocalDateTime recentFetchedAt = existing.get(0).getFetchedAt();
+            if (recentFetchedAt != null && recentFetchedAt.isAfter(LocalDateTime.now().minusHours(1))) {
+                return existing;
+            }
+        }
+
+        try {
+            // Steam API 호출 (DTO 리스트 반환)
+            List<SteamOwnedGameDto> fetchedDto = steamApiClient.fetchOwnedGames(steamId);
+
+            // DTO → Entity 변환
+            List<OwnedGame> fetched = fetchedDto.stream().map(dto -> {
+                OwnedGame game = new OwnedGame();
+                game.setSteamId(steamId);
+                game.setAppid(dto.getAppid());
+                game.setName(dto.getName());
+                game.setPlaytimeForever(dto.getPlaytimeForever());
+                game.setIconUrl(dto.getIconUrl());
+                game.setFetchedAt(LocalDateTime.now());
+                return game;
+            }).toList();
+
+            ownedGameRepository.deleteBySteamId(steamId); // 기존 기록 삭제
+            ownedGameRepository.saveAll(fetched);
+            return fetched;
+        } catch (HttpClientErrorException.TooManyRequests e) {
+            if (!existing.isEmpty()) {
+                return existing;
+            }
+            throw new RuntimeException("Steam API 요청이 과도합니다. 잠시 후 다시 시도해 주세요.");
+        }
     }
+
+
 
     public List<SteamRecentlyPlayedGameDto> getRecentlyPlayedGames(String steamId) {
         return steamApiClient.fetchRecentlyPlayedGames(steamId);
