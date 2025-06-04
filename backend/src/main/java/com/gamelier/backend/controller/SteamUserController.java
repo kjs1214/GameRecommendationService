@@ -6,11 +6,15 @@ import com.gamelier.backend.entity.OwnedGame;
 import com.gamelier.backend.repository.GameGenreRepository;
 import com.gamelier.backend.service.SteamUserService;
 import com.gamelier.backend.service.SteamGameService;
-import jakarta.servlet.http.HttpSession;
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Value;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +27,13 @@ public class SteamUserController {
     private final SteamGameService steamGameService;
     private final GameGenreRepository genreRepository;
 
-    public SteamUserController(SteamUserService steamUserService, SteamGameService steamGameService, GameGenreRepository genreRepository) {
+    public SteamUserController(SteamUserService steamUserService,
+                               SteamGameService steamGameService,
+                               GameGenreRepository genreRepository) {
         this.steamUserService = steamUserService;
         this.steamGameService = steamGameService;
         this.genreRepository = genreRepository;
     }
-
 
     @GetMapping("/{steamId}")
     public ResponseEntity<?> getUserProfile(@PathVariable String steamId) {
@@ -39,33 +44,29 @@ public class SteamUserController {
         return ResponseEntity.ok(profile);
     }
 
-
     @GetMapping("/me")
-    public ResponseEntity<?> getMySteamProfile(HttpSession session) {
-        String steamId = (String) session.getAttribute("steamId");
+    public ResponseEntity<?> getMySteamProfile(HttpServletRequest request) {
+        String steamId = (String) request.getAttribute("steamId");
         if (steamId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
-
         SteamProfileDto profile = steamUserService.getSteamUserProfile(steamId);
         return ResponseEntity.ok(profile);
     }
 
-
     @GetMapping("/me/games/sync")
-    public ResponseEntity<?> syncOwnedGames(HttpSession session) {
-        String steamId = (String) session.getAttribute("steamId");
+    public ResponseEntity<?> syncOwnedGames(HttpServletRequest request) {
+        String steamId = (String) request.getAttribute("steamId");
         if (steamId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
-
         var saved = steamGameService.fetchAndSaveOwnedGames(steamId);
         return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/me/games")
-    public ResponseEntity<?> getStoredGames(HttpSession session) {
-        String steamId = (String) session.getAttribute("steamId");
+    public ResponseEntity<?> getStoredGames(HttpServletRequest request) {
+        String steamId = (String) request.getAttribute("steamId");
         if (steamId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
@@ -87,12 +88,13 @@ public class SteamUserController {
     }
 
     @GetMapping("/me/recent-games")
-    public ResponseEntity<?> getRecentlyPlayedGames(HttpSession session) {
-        String steamId = (String) session.getAttribute("steamId");
+    public ResponseEntity<?> getRecentlyPlayedGames(HttpServletRequest request) {
+        String steamId = (String) request.getAttribute("steamId");
         if (steamId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
 
         return ResponseEntity.ok(steamGameService.getRecentlyPlayedGames(steamId));
     }
+
 }

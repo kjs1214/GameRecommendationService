@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module.exports = {
   content: [
     "./src/app/index.html",
@@ -78,3 +79,16 @@ module.exports = {
   plugins: [],
   darkMode: ["class"],
 };
+=======
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+>>>>>>> origin/backend
