@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from 'url';
 
 export default defineConfig({
   root: 'src/app',
+  publicDir: '../../public',
   plugins: [react()],
   resolve: {
     alias: {

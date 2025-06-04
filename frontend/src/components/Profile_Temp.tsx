@@ -4,14 +4,7 @@ import { Separator } from "./ui/separator";
 import type { JSX } from "react";
 
 export default function ProfileTemp(): JSX.Element {
-  // Game genre data for the donut chart
-  const genreData = [
-    { name: "FPS", percentage: "30%", color: "#ff703b" },
-    { name: "Simulation", percentage: "25%", color: "#39cef3" },
-    { name: "Rogue-like", percentage: "20%", color: "#39cef3" },
-    { name: "AOS", percentage: "15%", color: "#39cef3" },
-    { name: "Puzzle", percentage: "10%", color: "#9ad960" },
-  ];
+
 
   // Top 5 games data
   const topGames = [
@@ -44,26 +37,39 @@ export default function ProfileTemp(): JSX.Element {
 
   return (
     <div className="bg-white flex flex-row justify-center w-full">
-      <div className="bg-white overflow-hidden bg-gradient-to-b from-[#edeff7] to-[#8234ff] w-full max-w-[1920px] min-h-screen relative">
+      <div
+        className="bg-white w-full min-h-screen relative overflow-x-hidden"
+        style={{
+          background: "linear-gradient(180deg, rgba(237,239,247,1) 0%, rgba(130,52,255,1) 100%)",
+        }}
+      >
+
+
         {/* Header */}
         <header className="w-full h-[72px] bg-[#edeff7] relative">
           <div className="container mx-auto px-4 h-full flex items-center justify-between">
-            <div className="flex items-center">
-              <img src="" alt="Game logo" className="w-16 h-16 object-cover" />
-              <h1 className="font-extrabold text-5xl tracking-widest ml-4">
+            <div className="flex items-center pl-30">
+              <img
+                src="/GameRogo.png"
+                alt="Game logo"
+                className="w-16 h-16 object-cover relative top-[2px] mr-6"
+              />
+              <h1
+                className="font-extrabold text-5xl tracking-widest ml-4 relative top-[4px]"
+              >
                 G A M E L I E R
               </h1>
             </div>
-            <Button
-              variant="default"
-              className="bg-[#333333] rounded-[10px] border-[0.5px] border-[#00000040] shadow-md"
-            >
-              <img src="" alt="User" className="w-[72px] h-[11px]" />
-            </Button>
+
+
+
+
           </div>
           <Separator className="w-full h-[3px]" />
         </header>
-       
+
+
+
 
         {/* Hero Section */}
         <section className="container mx-auto px-4 mt-16 relative">
@@ -77,21 +83,29 @@ export default function ProfileTemp(): JSX.Element {
                   Game Playtime 분석
                 </h1>
                 <img
-                  src=""
+                  src="/AmigosSittingonChair.png"
                   alt="Person sitting on chair"
                   className="mt-8 max-w-[455px] h-auto"
                 />
               </div>
               <img
-                src=""
+                src="/Vector2.png"
                 alt="Vector background"
-                className="absolute top-0 left-0 w-full h-full z-0"
+                className="absolute top-0 left-[-20px] h-[950px] object-contain z-0"
               />
+              <img
+                src="/Vector3.png"
+                alt="Vector 3"
+                className="absolute top-0 right-0 w-[550px] h-auto z-10"
+              />
+
+
+
             </div>
 
             <div className="w-full md:w-1/2">
               <div className="relative">
-                <div className="bg-white rounded-full shadow-lg w-[369px] h-[369px] mx-auto relative">
+                <div className="bg-white rounded-full shadow-lg w-[369px] h-[369px] ml-[1000px] relative">
                   {/* This would be the donut chart */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     {/* Chart visualization would go here */}
@@ -101,36 +115,37 @@ export default function ProfileTemp(): JSX.Element {
                 {/* Genre percentages around the chart */}
                 <div className="absolute top-0 right-0">
                   <div className="text-right">
-                    <p className="font-bold text-[25px] text-[#ff703b]">30%</p>
-                    <p className="text-[15px] text-[#333333]">FPS</p>
+                    <p className="font-extrabold text-[35px] text-[#ff703b]">30%</p>
+                    <p className="font-extrabold text-[25px] text-[#333333]">FPS</p>
                   </div>
                 </div>
 
                 <div className="absolute bottom-0 right-0">
                   <div className="text-right">
-                    <p className="font-bold text-[25px] text-[#39cef3]">25%</p>
-                    <p className="text-[15px] text-[#333333]">Simulation</p>
+                    <p className="font-extrabold text-[35px] text-[#39cef3]">25%</p>
+                    <p className="font-extrabold text-[25px] text-[#333333]">Simulation</p>
                   </div>
                 </div>
 
-                <div className="absolute bottom-0 left-0">
+                <div className="absolute bottom-0 left-[800px]">
                   <div>
-                    <p className="font-bold text-[25px] text-[#39cef3]">20%</p>
-                    <p className="text-[15px] text-[#333333]">Rogue-like</p>
+                    <p className="font-extrabold text-[35px] text-[#39cef3]">20%</p>
+                    <p className="font-extrabold text-[25px] text-[#333333]">Rogue-like</p>
                   </div>
                 </div>
 
-                <div className="absolute top-1/3 left-0">
+
+                <div className="absolute top-1/3 left-[800px]">
                   <div>
-                    <p className="font-bold text-[25px] text-[#39cef3]">15%</p>
-                    <p className="text-[15px] text-[#333333]">AOS</p>
+                    <p className="font-extrabold text-[35px] text-[#39cef3]">15%</p>
+                    <p className="font-extrabold text-[25px] text-[#333333]">AOS</p>
                   </div>
                 </div>
 
-                <div className="absolute top-0 left-0">
+                <div className="absolute top-0 left-[800px]">
                   <div>
-                    <p className="font-bold text-[25px] text-[#9ad960]">10%</p>
-                    <p className="text-[15px] text-[#333333]">Puzzle</p>
+                    <p className="font-extrabold text-[35px] text-[#9ad960]">10%</p>
+                    <p className="font-extrabold text-[25px] text-[#333333]">Puzzle</p>
                   </div>
                 </div>
               </div>
@@ -151,7 +166,10 @@ export default function ProfileTemp(): JSX.Element {
               최근에는 FPS 장르를 주로 즐겨하셨군요!
             </p>
 
-            <Button className="bg-[#00cb69] text-black font-extrabold text-3xl h-auto py-4 rounded-[5px] mb-16">
+            <Button className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px] mb-16"
+              onClick={() => {
+                window.location.href = "http://localhost:5173/trend";
+              }}>
               → 다른 FPS 게임 추천 받기
             </Button>
 
@@ -191,7 +209,10 @@ export default function ProfileTemp(): JSX.Element {
               <br />한 번 보러 가볼까요?
             </p>
 
-            <Button className="bg-[#00cb69] text-black font-extrabold text-3xl h-auto py-4 rounded-[5px]">
+            <Button className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px]"
+              onClick={() => {
+                window.location.href = "http://localhost:5173/recommend";
+              }}>
               → AI로 나에게 맞는 게임 추천 받기
             </Button>
           </div>

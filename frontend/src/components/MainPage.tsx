@@ -42,14 +42,15 @@ export default function MainPage(): JSX.Element {
 
         {/* Hero Banner */}
         <section className="relative w-full max-w-[1440px] h-[300px] mx-auto mt-[91px] shadow-[5px_5px_30px_#00000066] [background:linear-gradient(135deg,rgba(166,93,253,1)_0%,rgba(74,193,255,1)_100%)]">
-          <h2 className="absolute top-[118px] left-[366px] text-white text-[50px] font-extrabold tracking-[0] leading-normal">
+          <h2 className="absolute top-[118px] left-[350px] text-white text-[50px] font-extrabold tracking-[0] leading-normal">
             자신에게 딱 맞는 게임을 찾아보세요
           </h2>
           <img
-            className="absolute w-[267px] h-[222px] top-[39px] right-[45px]"
+            className="absolute w-[267px] h-[222px] top-[39px] right-[20px]"
             alt="Person sitting on chair"
-            src=""
+            src="/AmigosSittingonChair.png"
           />
+
         </section>
 
         {/* Service Description */}
@@ -99,13 +100,18 @@ export default function MainPage(): JSX.Element {
                 AI가 <br />
                 Steam 상점의
                 <br />
-                100,000개의 게임들 중<br />
+                60,000개의 게임들 중<br />
                 <br />
                 당신에게 딱 맞는 <br />단 5개의 게임을
                 <br />
                 찾아낼 거에요
               </div>
-              <Button className="w-full h-auto bg-white hover:bg-white/90 rounded-[5px]">
+              <Button
+                className="w-full h-auto bg-white hover:bg-white/90 rounded-[5px]"
+                onClick={() => {
+                  window.location.href = "http://localhost:5173/recommend";
+                }}
+              >
                 <span className="text-black text-3xl font-extrabold tracking-[0] leading-[72px]">
                   → 게임 추천 받으러 가기
                 </span>
@@ -126,7 +132,12 @@ export default function MainPage(): JSX.Element {
                 <br />
                 느껴보세요
               </div>
-              <Button className="w-full h-auto bg-white hover:bg-white/90 rounded-[5px]">
+              <Button
+                className="w-full h-auto bg-white hover:bg-white/90 rounded-[5px]"
+                onClick={() => {
+                  window.location.href = "http://localhost:5173/trend";
+                }}
+              >
                 <span
                   className="text-black text-3xl font-extrabold leading-[72px] whitespace-nowrap"
                   style={{ letterSpacing: 0 }}
