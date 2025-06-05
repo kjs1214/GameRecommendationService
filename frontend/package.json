@@ -10,50 +10,28 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@radix-ui/react-primitive": "^2.1.2",
-    "@radix-ui/react-separator": "^1.1.6",
-=======
+    "@radix-ui/react-separator": "^1.1.7",
     "@tailwindcss/vite": "^4.1.8",
     "@vitejs/plugin-react": "^4.0.0",
->>>>>>> origin/backend
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-<<<<<<< HEAD
-    "react-router-dom": "^7.6.0",
-    "recharts": "^2.15.3"
-=======
     "react-router-dom": "^7.6.2",
     "recharts": "^2.15.3",
     "vite": "^5.0.0"
->>>>>>> origin/backend
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@tailwindcss/postcss": "^4.1.7",
-    "@types/node": "^22.15.18",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-<<<<<<< HEAD
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.21",
-=======
     "@vitejs/plugin-react": "^4.5.0",
->>>>>>> origin/backend
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
-<<<<<<< HEAD
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.7",
-    "typescript": "~5.7.2",
-=======
     "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3",
->>>>>>> origin/backend
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.5"
   }
