@@ -1,12 +1,33 @@
+// src/components/MainPage.tsx
+
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Separator } from "./ui/separator";
-
+import { useNavigate } from "react-router-dom";
 import type { JSX } from "react";
 
-export default function MainPage(): JSX.Element {
+interface UserInfo {
+  steamId: string;
+  iconUrl: string;
+  personaName: string;
+}
+
+interface Props {
+  userInfo: UserInfo | null;
+}
+export default function MainPage({ userInfo }: Props): JSX.Element {
+  console.log("userInfo.iconUrl =", userInfo?.iconUrl);
+  const navigate = useNavigate();
+
+  const handleClick = (path: string) => {
+    if (userInfo) {
+      navigate(path);
+    } else {
+      window.location.href = "http://localhost:8080/login/steam";
+    }
+  };
   return (
-    <div className="bg-[#edeff7] flex flex-row justify-center w-full">
+    <div className="bg-[#edeff7] flex flex-row justify-center w-full min-h-screen">
       <div className="bg-[#edeff7] w-full max-w-[1920px] relative">
         {/* Header */}
         <header className="absolute w-[1440px] h-[72px] left-[255px] top-0 bg-[#edeff7]">
@@ -14,29 +35,37 @@ export default function MainPage(): JSX.Element {
             <h1 className="absolute left-[514px] top-[5px] font-extrabold text-[50px] leading-[61px] text-black tracking-[0]">
               G&nbsp;A&nbsp;M&nbsp;E&nbsp;L&nbsp;I&nbsp;E&nbsp;R
             </h1>
-
-
-            <div
-              className="absolute right-[110px] top-[18px] flex items-center justify-center p-[10px] gap-[10px] bg-[#333333] rounded-[10px] border-[0.5px] border-solid border-[#00000040] shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
-            >
-              <button
-                type="button"
-                className="w-[74px] h-[15px] font-inter font-extrabold text-[12px] leading-[15px] text-white"
-                onClick={() => {
-                  window.location.href = "http://localhost:8080/login/steam";
-                }}
-              >
-                로그인
-              </button>
+            {/* ─── 헤더 우측 상단: 로그인된 상태면 프로필, 아니면 로그인 버튼 */}
+            <div className="absolute right-[110px] top-[18px] flex items-center gap-2 p-2 bg-[#333333] rounded-[10px] border border-[#00000040] shadow-[0_2px_4px_rgba(0,0,0,0.25)]">
+              {userInfo ? (
+                // 로그인된 상태 → 프로필 아이콘 + 닉네임 노출
+                <div className="flex items-center gap-2">
+                  <img
+                    src={userInfo.iconUrl}
+                    alt="프로필"
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <span className="text-white">{userInfo.personaName}</span>
+                </div>
+              ) : (
+                // 로그인 안 된 상태 → Steam 로그인 버튼
+                <button
+                  type="button"
+                  className="w-[74px] h-[15px] font-inter font-extrabold text-[12px] leading-[15px] text-white"
+                  onClick={() => {
+                    window.location.href = "http://localhost:8080/login/steam";
+                  }}
+                >
+                  로그인
+                </button>
+              )}
             </div>
-
-
           </div>
 
           {/* Line 12 */}
           <Separator
             className="absolute border-solid border-[3px] border-black"
-            style={{ width: '1449px', height: 0, left: '-9px', top: '72px' }}
+            style={{ width: "1449px", height: 0, left: "-9px", top: "72px" }}
           />
         </header>
 
@@ -50,7 +79,6 @@ export default function MainPage(): JSX.Element {
             alt="Person sitting on chair"
             src="/AmigosSittingonChair.png"
           />
-
         </section>
 
         {/* Service Description */}
@@ -81,15 +109,12 @@ export default function MainPage(): JSX.Element {
               </div>
               <Button
                 className="w-full h-auto bg-white hover:bg-white/90 rounded-[5px]"
-                onClick={() => {
-                  window.location.href = "http://localhost:5173/profile";
-                }}
+                onClick={() => handleClick("/profile")}
               >
                 <span className="text-black text-3xl font-extrabold tracking-[0] leading-[72px]">
                   → 프로필 확인하러 가기
                 </span>
               </Button>
-
             </CardContent>
           </Card>
 
@@ -108,9 +133,7 @@ export default function MainPage(): JSX.Element {
               </div>
               <Button
                 className="w-full h-auto bg-white hover:bg-white/90 rounded-[5px]"
-                onClick={() => {
-                  window.location.href = "http://localhost:5173/recommend";
-                }}
+                onClick={() => handleClick("/recommend")}
               >
                 <span className="text-black text-3xl font-extrabold tracking-[0] leading-[72px]">
                   → 게임 추천 받으러 가기
@@ -134,9 +157,7 @@ export default function MainPage(): JSX.Element {
               </div>
               <Button
                 className="w-full h-auto bg-white hover:bg-white/90 rounded-[5px]"
-                onClick={() => {
-                  window.location.href = "http://localhost:5173/trend";
-                }}
+                onClick={() => handleClick("/trend")}
               >
                 <span
                   className="text-black text-3xl font-extrabold leading-[72px] whitespace-nowrap"
@@ -145,7 +166,6 @@ export default function MainPage(): JSX.Element {
                   → 게임 트렌드 보러 가기
                 </span>
               </Button>
-
             </CardContent>
           </Card>
         </section>
