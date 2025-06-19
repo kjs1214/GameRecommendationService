@@ -9,8 +9,32 @@ import type { JSX } from "react";
 import GameDetailsSection from "./GameDetailsSection";
 import ReviewSection from "./ReviewSection";
 import ScreenshotGallerySection from "./ScreenshotGallerySection";
+import { fetchOwnedGames, fetchProfile } from "../api/steam";
+import type { OwnedGame } from "../types/Steam";
+import { useState, useEffect} from "react";
 
 export default function GamerecommendTemp(): JSX.Element {
+  const [games, setGames] = useState<OwnedGame[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [username, setUsername] = useState<string | null>(null);
+
+  // Steam 보유 게임 데이터 로드
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const owned = await fetchOwnedGames();
+        setGames(owned);
+
+        const profile = await fetchProfile();
+        setUsername(profile.personaname);
+      } catch (err) {
+        console.error("❌ 데이터 불러오기 실패:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
   // Screenshot gallery data
   const screenshotGalleryData = [
     { id: 1, src: "/scr_image1.png", alt: "Game screenshot 1" },
@@ -56,7 +80,7 @@ export default function GamerecommendTemp(): JSX.Element {
           {/* Personalized recommendation section */}
           <section className="mt-8">
             <h2 className="[font-family:'Inter-ExtraBold',Helvetica] font-extrabold text-black text-[40px] tracking-[0] leading-[normal]">
-              오직 &quot;jm-2025&quot; 님을 위한
+              {username ? `오직'${username}' 님을 위한한` : "로딩 중..."}
             </h2>
             <h1 className="[font-family:'Inter-Bold',Helvetica] font-bold text-black text-[80px] tracking-[0] leading-[normal]">
               GAMELIER&apos;s&nbsp;&nbsp;PICK
