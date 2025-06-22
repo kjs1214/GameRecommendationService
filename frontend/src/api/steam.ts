@@ -41,3 +41,13 @@ export async function fetchRecommendedGames(appIds: string[], token: string) {
 
 	return response.data;
 }
+
+// 게임 ID로부터 리뷰 목록 가져오기
+export async function fetchGameReviews(appId: string, token: string) {
+	const response = await axios.get(`/api/review/${appId}`, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+	return response.data;
+}

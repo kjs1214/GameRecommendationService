@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchRecommendedGames } from "../api/steam";
-import GameCard from "../components/GameCard"; // 추천 게임 카드 컴포넌트
+import GameDetailCard from "../components/GameDetailCard";
 
 interface Game {
 	steam_appid: number;
@@ -43,17 +43,19 @@ export default function GameRecommendationPage() {
 		);
 	}
 
-	return (
-		<div className="min-h-screen bg-gradient-to-b from-white to-slate-100 dark:from-gray-800 dark:to-gray-900 p-6">
-			<h2 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-white">
-				추천 게임 목록
-			</h2>
-
-			<div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-				{games.map((game) => (
-					<GameCard key={game.steam_appid} game={game} />
-				))}
+	if (games.length === 0) {
+		return (
+			<div className="flex justify-center items-center min-h-screen text-xl text-gray-500">
+				추천 게임이 없습니다.
 			</div>
+		);
+	}
+
+	return (
+		<div className="min-h-screen bg-gradient-to-b from-white to-slate-100 dark:from-gray-800 dark:to-gray-900 p-6 space-y-8">
+			{games.map((game) => (
+				<GameDetailCard key={game.steam_appid} game={game} />
+			))}
 		</div>
 	);
 }
