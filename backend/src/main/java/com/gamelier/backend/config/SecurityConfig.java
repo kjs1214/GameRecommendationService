@@ -48,7 +48,8 @@ public class SecurityConfig {
                                 "/login/steam/callback",
                                 "/error",
                                 "/favicon.ico",
-                                "/css/**", "/js/**", "/images/**"
+                                "/css/**", "/js/**", "/images/**",
+                                "/api/review/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
