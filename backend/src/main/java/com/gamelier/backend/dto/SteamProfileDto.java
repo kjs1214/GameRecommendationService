@@ -1,5 +1,7 @@
 package com.gamelier.backend.dto;
+import lombok.Data;
 
+@Data
 public class SteamProfileDto {
     private String steamid;
     private String personaname;
@@ -11,21 +13,5 @@ public class SteamProfileDto {
         this.personaname = personaname;
         this.avatar = avatar;
         this.profileurl = profileurl;
-    }
-
-    public String getSteamid() {
-        return steamid;
-    }
-
-    public String getPersonaname() {
-        return personaname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public String getProfileurl() {
-        return profileurl;
     }
 }

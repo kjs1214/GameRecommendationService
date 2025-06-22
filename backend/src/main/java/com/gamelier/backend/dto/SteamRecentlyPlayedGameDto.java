@@ -1,5 +1,7 @@
 package com.gamelier.backend.dto;
+import lombok.Data;
 
+@Data
 public class SteamRecentlyPlayedGameDto {
     private int appid;
     private String name;
@@ -14,10 +16,4 @@ public class SteamRecentlyPlayedGameDto {
         this.playtimeForever = playtimeForever;
         this.iconUrl = iconUrl;
     }
-
-    public int getAppid() { return appid; }
-    public String getName() { return name; }
-    public int getPlaytime2Weeks() { return playtime2Weeks; }
-    public int getPlaytimeForever() { return playtimeForever; }
-    public String getIconUrl() { return iconUrl; }
 }

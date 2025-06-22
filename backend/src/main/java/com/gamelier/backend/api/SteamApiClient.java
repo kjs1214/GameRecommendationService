@@ -97,4 +97,9 @@ public class SteamApiClient {
         }
         return result;
     }
+
+    public Map<String, Object> getGameDetailRaw(String appId) {
+        String url = "https://store.steampowered.com/api/appdetails?appids=" + appId + "&cc=kr&l=korean";
+        return restTemplate.getForObject(url, Map.class);
+    }
 }
