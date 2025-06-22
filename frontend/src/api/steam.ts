@@ -27,3 +27,17 @@ export const fetchRecentGames = async (): Promise<RecentlyPlayedGame[]> => {
 	const res = await axios.get("/api/steam/user/me/recent-games");
 	return res.data;
 };
+
+export async function fetchRecommendedGames(appIds: string[], token: string) {
+	const response = await axios.post(
+		"/api/recommendation/details",
+		{ appIds },
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}
+	);
+
+	return response.data;
+}

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import GameRecommendationPage from "./pages/GameRecommendationPage";
 import "./index.css";
 
 function App() {
@@ -44,7 +46,12 @@ function App() {
 		return <div className="text-center mt-10">인증 확인 중...</div>;
 	}
 
-	return <Home userInfo={userInfo} />;
+	return (
+		<Routes>
+			<Route path="/" element={<Home userInfo={userInfo} />} />
+			<Route path="/recommendations" element={<GameRecommendationPage />} />
+		</Routes>
+	);
 }
 
 export default App;
