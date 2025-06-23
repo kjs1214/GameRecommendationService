@@ -3,7 +3,9 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY . .
 
-RUN ./gradlew build
+
+RUN ./gradlew --no-daemon clean build --refresh-dependencies
+
 
 EXPOSE 8080
 
