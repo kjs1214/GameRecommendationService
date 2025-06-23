@@ -25,9 +25,10 @@ for path in json_files:
         reviews = content.get("reviews", [])
         for r in reviews:
             rows.append({
-                "user_id": "'"+str(r["author"]["steamid"]), 
+                "steam_id": str(r["author"]["steamid"]), 
                 "game_id": os.path.basename(os.path.dirname(path)),
-                "playtime": r["author"]["playtime_forever"]
+                "playtime": r["author"]["playtime_forever"],
+                "liked": int(r["author"]["playtime_forever"]>=60)
             })
     except Exception as e:
         print(f"[에러] {path}: {e}")
