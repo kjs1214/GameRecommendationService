@@ -61,10 +61,7 @@ export default function GametrendTemp() {
               <h1 className="font-extrabold text-black text-[50px]">G&nbsp;A&nbsp;M&nbsp;E&nbsp;L&nbsp;I&nbsp;E&nbsp;R</h1>
             </div>
             <div className="absolute right-8">
-              <Button
-                variant="default"
-                className="bg-[#333333] rounded-[10px] border border-[#00000040] shadow-sm"
-              />
+              
             </div>
           </div>
           <div className="w-full h-[3px] bg-black" />

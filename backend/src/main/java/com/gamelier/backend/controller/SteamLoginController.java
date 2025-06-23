@@ -61,11 +61,13 @@ public class SteamLoginController {
 
             // JWT 발급
             String token = Jwts.builder()
-                    .setSubject(steamId)
+                    .setSubject("user")
+                    .claim("steamId", steamId)
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                     .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
+
 
             // 게임 데이터 저장
             steamGameService.fetchAndSaveOwnedGames(steamId);
