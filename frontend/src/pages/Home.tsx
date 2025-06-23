@@ -15,7 +15,8 @@ export default function Home({ userInfo }: Props) {
 		if (userInfo) {
 			navigate(path);
 		} else {
-			window.location.href = "http://localhost:8080/login/steam";
+			window.location.href =
+				"https://gamerecommendationservice.onrender.com/login/steam";
 		}
 	};
 
