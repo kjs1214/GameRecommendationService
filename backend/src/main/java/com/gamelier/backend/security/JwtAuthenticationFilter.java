@@ -46,14 +46,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .parseClaimsJws(authHeader.substring(7))
                         .getBody();
 
-                String steamId = claims.getSubject();
+                // ✅ claim에서 steamId 꺼냄
+                String steamId = claims.get("steamId", String.class);
 
                 // ✅ 인증 객체 생성 및 등록
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(steamId, null, Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                // ✅ steamId도 request에 붙임 (기존 유지)
+                // ✅ request에 steamId 저장
                 request.setAttribute("steamId", steamId);
 
                 filterChain.doFilter(request, response);
@@ -69,6 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Missing token.");
     }
+
 
 }
 

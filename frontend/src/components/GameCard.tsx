@@ -1,56 +1,46 @@
+// src/components/GameCard.tsx
 import React from "react";
 
-interface Game {
-	steam_appid: number;
-	name: string;
-	header_image: string;
-	short_description: string;
-	price_overview?: {
-		final_formatted: string;
-	};
-}
-
 interface GameCardProps {
-	game: Game;
+	appid: number;
+	name: string;
+	imageUrl: string;
+	price?: string;
+	linkToStore?: boolean;
 }
 
-export default function GameCard({ game }: GameCardProps) {
-	const storeUrl = `https://store.steampowered.com/app/${game.steam_appid}`;
-
-	return (
-		<div
-			style={{
-				border: "1px solid #ddd",
-				borderRadius: "10px",
-				padding: "1rem",
-				backgroundColor: "#fff",
-				boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-				display: "flex",
-				flexDirection: "column",
-				height: "100%",
-				justifyContent: "space-between",
-			}}
-		>
-			<a href={storeUrl} target="_blank" rel="noopener noreferrer">
-				<img
-					src={game.header_image}
-					alt={game.name}
-					style={{
-						width: "100%",
-						borderRadius: "6px",
-						marginBottom: "0.75rem",
-					}}
-				/>
-			</a>
-			<h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
-				{game.name}
-			</h3>
-			<p style={{ fontSize: "0.9rem", flexGrow: 1 }}>
-				{game.short_description}
-			</p>
-			<p style={{ marginTop: "0.75rem", fontWeight: "bold" }}>
-				{game.price_overview?.final_formatted || "가격 정보 없음"}
-			</p>
+export default function GameCard({
+	appid,
+	name,
+	imageUrl,
+	price,
+	linkToStore = true,
+}: GameCardProps) {
+	const cardContent = (
+		<div className="w-60 rounded overflow-hidden shadow-md bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow duration-200">
+			<img src={imageUrl} alt={name} className="w-full h-36 object-cover" />
+			<div className="p-3">
+				<h3 className="text-md font-semibold text-gray-800 dark:text-white truncate">
+					{name}
+				</h3>
+				{price && (
+					<p className="text-sm text-gray-600 dark:text-gray-300">{price}</p>
+				)}
+			</div>
 		</div>
 	);
+
+	if (linkToStore) {
+		return (
+			<a
+				href={`https://store.steampowered.com/app/${appid}`}
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				{cardContent}
+			</a>
+		);
+	}
+
+	return cardContent;
 }

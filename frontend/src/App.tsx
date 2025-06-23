@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import GameRecommendationPage from "./pages/GameRecommendationPage";
+import LoginSuccessPage from "./pages/LoginSuccessPage";
+import GameTrendPage from "./pages/GameTrendPage";
 import "./index.css";
+import axios from "./api/axios"; // ✅ axios 인스턴스 import
 
 function App() {
 	const [checkingAuth, setCheckingAuth] = useState(true);
@@ -23,22 +26,10 @@ function App() {
 			return;
 		}
 
-		fetch("http://localhost:8080/api/auth/me", {
-			headers: {
-				Authorization: `Bearer ${savedToken}`,
-			},
-		})
-			.then(async (res) => {
-				if (res.ok) {
-					const data = await res.json();
-					setUserInfo(data);
-				} else {
-					localStorage.removeItem("token");
-				}
-			})
-			.catch(() => {
-				localStorage.removeItem("token");
-			})
+		axios
+			.get("/auth/me") // ✅ 인터셉터가 자동으로 토큰 붙여줌
+			.then((res) => setUserInfo(res.data))
+			.catch(() => localStorage.removeItem("token"))
 			.finally(() => setCheckingAuth(false));
 	}, []);
 
@@ -50,6 +41,8 @@ function App() {
 		<Routes>
 			<Route path="/" element={<Home userInfo={userInfo} />} />
 			<Route path="/recommendations" element={<GameRecommendationPage />} />
+			<Route path="/trend" element={<GameTrendPage />} />
+			<Route path="/login/success" element={<LoginSuccessPage />} />
 		</Routes>
 	);
 }
