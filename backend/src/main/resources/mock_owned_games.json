@@ -1,0 +1,125 @@
+[
+  {
+    "steamId": "1234567890",
+    "appid": 1000,
+    "name": "Elden Ring",
+    "playtimeForever": 192,
+    "iconUrl": "https://cdn.example.com/game0.jpg",
+    "fetchedAt": "2025-06-23T21:46:34.376163",
+    "genres": [
+      "Shooter",
+      "Action"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1001,
+    "name": "Stardew Valley",
+    "playtimeForever": 53,
+    "iconUrl": "https://cdn.example.com/game1.jpg",
+    "fetchedAt": "2025-06-23T21:19:34.376187",
+    "genres": [
+      "Shooter",
+      "RPG"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1002,
+    "name": "Cyberpunk 2077",
+    "playtimeForever": 162,
+    "iconUrl": "https://cdn.example.com/game2.jpg",
+    "fetchedAt": "2025-06-23T21:14:34.376199",
+    "genres": [
+      "Simulation",
+      "Shooter"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1003,
+    "name": "The Witcher 3",
+    "playtimeForever": 79,
+    "iconUrl": "https://cdn.example.com/game3.jpg",
+    "fetchedAt": "2025-06-23T21:36:34.376212",
+    "genres": [
+      "Shooter",
+      "Shooter"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1004,
+    "name": "Hades",
+    "playtimeForever": 86,
+    "iconUrl": "https://cdn.example.com/game4.jpg",
+    "fetchedAt": "2025-06-23T20:49:34.376219",
+    "genres": [
+      "RPG",
+      "Shooter",
+      "Strategy"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1005,
+    "name": "Terraria",
+    "playtimeForever": 96,
+    "iconUrl": "https://cdn.example.com/game5.jpg",
+    "fetchedAt": "2025-06-23T21:05:34.376227",
+    "genres": [
+      "Action",
+      "Indie",
+      "Indie"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1006,
+    "name": "Slay the Spire",
+    "playtimeForever": 212,
+    "iconUrl": "https://cdn.example.com/game6.jpg",
+    "fetchedAt": "2025-06-23T21:08:34.376234",
+    "genres": [
+      "Adventure",
+      "Indie"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1007,
+    "name": "Red Dead Redemption 2",
+    "playtimeForever": 182,
+    "iconUrl": "https://cdn.example.com/game7.jpg",
+    "fetchedAt": "2025-06-23T20:55:34.376242",
+    "genres": [
+      "Indie",
+      "Strategy"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1008,
+    "name": "Apex Legends",
+    "playtimeForever": 16,
+    "iconUrl": "https://cdn.example.com/game8.jpg",
+    "fetchedAt": "2025-06-23T21:43:34.376251",
+    "genres": [
+      "RPG",
+      "Adventure",
+      "Adventure"
+    ]
+  },
+  {
+    "steamId": "1234567890",
+    "appid": 1009,
+    "name": "Valorant",
+    "playtimeForever": 62,
+    "iconUrl": "https://cdn.example.com/game9.jpg",
+    "fetchedAt": "2025-06-23T21:43:34.376258",
+    "genres": [
+      "Strategy",
+      "Simulation"
+    ]
+  }
+]

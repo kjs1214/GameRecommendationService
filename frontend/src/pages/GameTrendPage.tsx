@@ -60,10 +60,10 @@ export default function GameTrendPage(): JSX.Element {
 					}))
 				);
 
-				const popRes = await axios.get("/steam/popular");
+				const popRes = await axios.get("api/steam/popular");
 				setPopularGames(popRes.data);
 
-				const disRes = await axios.get("/steam/discounts");
+				const disRes = await axios.get("api/steam/discounts");
 				setDiscountedGames(disRes.data);
 			} catch (err) {
 				console.error(err);

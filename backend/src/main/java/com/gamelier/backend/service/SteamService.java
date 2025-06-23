@@ -2,9 +2,14 @@ package com.gamelier.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gamelier.backend.entity.OwnedGame;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.InputStream;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +43,26 @@ public class SteamService {
 
         } catch (Exception e) {
             throw new RuntimeException("Steam API 호출 실패", e);
+        }
+    }
+
+    public List<OwnedGame> loadMockGames() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = getClass().getClassLoader().getResourceAsStream("mock_owned_games.json");
+            List<Map<String, Object>> rawList = mapper.readValue(is, new TypeReference<>() {});
+            return rawList.stream().map(data -> {
+                OwnedGame g = new OwnedGame();
+                g.setSteamId((String) data.get("steamId"));
+                g.setAppid((Integer) data.get("appid"));
+                g.setName((String) data.get("name"));
+                g.setPlaytimeForever((Integer) data.get("playtimeForever"));
+                g.setIconUrl((String) data.get("iconUrl"));
+                g.setFetchedAt(LocalDateTime.parse((String) data.get("fetchedAt")));
+                return g;
+            }).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load mock data", e);
         }
     }
 }

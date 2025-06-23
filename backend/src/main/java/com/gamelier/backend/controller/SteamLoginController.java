@@ -41,8 +41,8 @@ public class SteamLoginController {
                 .fromUriString("https://steamcommunity.com/openid/login")
                 .queryParam("openid.ns", "http://specs.openid.net/auth/2.0")
                 .queryParam("openid.mode", "checkid_setup")
-                .queryParam("openid.return_to", "https://gamerecommendationservice.onrender.com/login/steam/callback") // 백엔드 주소!
-                .queryParam("openid.realm", "https://gamerecommendationservice.onrender.com") // 백엔드 주소!
+                .queryParam("openid.return_to", "http://localhost:8080/login/steam/callback") // ✅ 백엔드 콜백 주소
+                .queryParam("openid.realm", "http://localhost:8080")                          // ✅ 백엔드 도메인
                 .queryParam("openid.identity", "http://specs.openid.net/auth/2.0/identifier_select")
                 .queryParam("openid.claimed_id", "http://specs.openid.net/auth/2.0/identifier_select")
                 .build().toUriString();
@@ -59,7 +59,6 @@ public class SteamLoginController {
         if (claimedId != null) {
             String steamId = claimedId.substring(claimedId.lastIndexOf("/") + 1);
 
-            // JWT 발급
             String token = Jwts.builder()
                     .setSubject("user")
                     .claim("steamId", steamId)
@@ -68,14 +67,14 @@ public class SteamLoginController {
                     .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
 
-            // 게임 데이터 저장
             steamGameService.fetchAndSaveOwnedGames(steamId);
 
-            // 🔁 프론트 주소로 리다이렉트
-            return new RedirectView("https://gamerecommendationservice.vercel.app/login/success?token=" + token);
+            // ✅ 프론트 로컬 주소로 리디렉트
+            return new RedirectView("http://localhost:5173/login/success?token=" + token);
         }
 
         return new RedirectView("/login/failure");
     }
+
 
 }

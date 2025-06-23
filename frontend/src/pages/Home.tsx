@@ -15,8 +15,7 @@ export default function Home({ userInfo }: Props) {
 		if (userInfo) {
 			navigate(path);
 		} else {
-			window.location.href =
-				"https://gamerecommendationservice.onrender.com/login/steam";
+			window.location.href = "http://localhost:8080/login/steam";
 		}
 	};
 
@@ -36,8 +35,7 @@ export default function Home({ userInfo }: Props) {
 				) : (
 					<button
 						onClick={() =>
-							(window.location.href =
-								"https://gamerecommendationservice.onrender.com/login/steam")
+							(window.location.href = "http://localhost:8080/login/steam")
 						}
 						className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
 					>

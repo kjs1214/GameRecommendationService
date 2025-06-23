@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -29,7 +28,7 @@ function App() {
 		}
 
 		axios
-			.get("/auth/me") // ✅ 인터셉터가 자동으로 토큰 붙여줌
+			.get("api/auth/me") // ✅ 인터셉터가 자동으로 토큰 붙여줌
 			.then((res) => setUserInfo(res.data))
 			.catch(() => localStorage.removeItem("token"))
 			.finally(() => setCheckingAuth(false));

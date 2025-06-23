@@ -8,9 +8,6 @@ import { Separator } from "../components/ui/separator";
 import type { JSX } from "react";
 import type { OwnedGame } from "../types/Steam";
 
-
-
-
 /*const topGames = [
   {
 	name: "1. 배틀그라운드",
@@ -45,9 +42,12 @@ export default function ProfileTemp(): JSX.Element {
 	const [username, setUsername] = useState<string | null>(null);
 	const [recentGames, setRecentGames] = useState<OwnedGame[]>([]);
 
-
 	const playType = useMemo(() => {
-		if (games.length === 0) return { type: "모험가", description: "다양한 게임을 체험하며 많은 경험을 쌓고 계시네요!" };
+		if (games.length === 0)
+			return {
+				type: "모험가",
+				description: "다양한 게임을 체험하며 많은 경험을 쌓고 계시네요!",
+			};
 
 		const genreMap = new Map<string, number>();
 		let totalPlaytime = 0;
@@ -68,16 +68,35 @@ export default function ProfileTemp(): JSX.Element {
 		const topRatio = genreArray[0]?.[1] / totalPlaytime;
 
 		if (topRatio > 0.7) {
-			return { type: "몰입러", description: `특히 ${topGenre} 장르에 깊이 몰입하고 계시네요!` };
+			return {
+				type: "몰입러",
+				description: `특히 ${topGenre} 장르에 깊이 몰입하고 계시네요!`,
+			};
 		} else if (genreArray.length >= 6) {
-			return { type: "모험가", description: "다양한 게임을 체험하며 많은 경험을 쌓고 계시네요!" };
-		} else if (["RPG", "Adventure", "Story"].some((g) => topGenre.includes(g))) {
-			return { type: "탐험가", description: "스토리 중심의 게임에서 세계를 탐험하는 걸 좋아하시네요!" };
-		} else if (["Strategy", "Simulation", "Tactics"].some((g) => topGenre.includes(g))) {
-			return { type: "전략가", description: "두뇌를 쓰는 전략 게임에 관심이 많으시군요!" };
+			return {
+				type: "모험가",
+				description: "다양한 게임을 체험하며 많은 경험을 쌓고 계시네요!",
+			};
+		} else if (
+			["RPG", "Adventure", "Story"].some((g) => topGenre.includes(g))
+		) {
+			return {
+				type: "탐험가",
+				description: "스토리 중심의 게임에서 세계를 탐험하는 걸 좋아하시네요!",
+			};
+		} else if (
+			["Strategy", "Simulation", "Tactics"].some((g) => topGenre.includes(g))
+		) {
+			return {
+				type: "전략가",
+				description: "두뇌를 쓰는 전략 게임에 관심이 많으시군요!",
+			};
 		}
 
-		return { type: "게이머", description: "즐겁게 다양한 게임을 플레이하고 계세요!" };
+		return {
+			type: "게이머",
+			description: "즐겁게 다양한 게임을 플레이하고 계세요!",
+		};
 	}, [games]);
 
 	const recentGenre = useMemo(() => {
@@ -107,7 +126,6 @@ export default function ProfileTemp(): JSX.Element {
 
 				const recent = await fetchRecentGames();
 
-
 				const converted = recent.map((g) => ({ ...g, genre: [] }));
 				setRecentGames(converted);
 			} catch (err) {
@@ -123,7 +141,9 @@ export default function ProfileTemp(): JSX.Element {
 		if (!games || games.length === 0) return [];
 
 		// 플레이타임 기준 내림차순 정렬 후 상위 5개
-		const sorted = [...games].sort((a, b) => b.playtimeForever - a.playtimeForever).slice(0, 5);
+		const sorted = [...games]
+			.sort((a, b) => b.playtimeForever - a.playtimeForever)
+			.slice(0, 5);
 
 		// 게임별 배경색 및 너비
 		const bgClasses = [
@@ -143,7 +163,6 @@ export default function ProfileTemp(): JSX.Element {
 		}));
 	}, [games]);
 
-
 	// 장르별 플레이타임 합산 -> Donut 차트용 데이터
 	const genreData = useMemo(() => {
 		const map = new Map<string, number>();
@@ -161,14 +180,21 @@ export default function ProfileTemp(): JSX.Element {
 			<div
 				className="w-full min-h-screen relative overflow-x-hidden"
 				style={{
-					background: "linear-gradient(180deg, rgba(237,239,247,1) 0%, rgba(130,52,255,1) 100%)",
+					background:
+						"linear-gradient(180deg, rgba(237,239,247,1) 0%, rgba(130,52,255,1) 100%)",
 				}}
 			>
 				{/* Header */}
 				<header className="w-full h-[72px] bg-[#edeff7] relative">
 					<div className="container mx-auto px-4 h-full flex items-center justify-center">
-						<img src="/GameRogo.png" alt="Game logo" className="w-12 h-12 object-cover mr-4" />
-						<h1 className="font-extrabold text-4xl text-black tracking-widest text-center">G A M E L I E R</h1>
+						<img
+							src="/GameRogo.png"
+							alt="Game logo"
+							className="w-12 h-12 object-cover mr-4"
+						/>
+						<h1 className="font-extrabold text-4xl text-black tracking-widest text-center">
+							G A M E L I E R
+						</h1>
 					</div>
 					<Separator className="w-full h-[3px]" />
 				</header>
@@ -178,11 +204,23 @@ export default function ProfileTemp(): JSX.Element {
 					<div className="flex flex-col md:flex-row items-center gap-8">
 						{/* 왼쪽 텍스트+이미지 */}
 						<div className="w-full md:w-1/2 relative flex justify-start ml-[-20px]">
-							<img src="/Vector2.png" alt="Vector bg" className="absolute top-0 left-0 w-[400px] h-auto z-0" />
+							<img
+								src="/Vector2.png"
+								alt="Vector bg"
+								className="absolute top-0 left-0 w-[400px] h-auto z-0"
+							/>
 							<div className="relative z-10 pl-4">
-								<h2 className="font-bold text-black text-3xl mb-2">{username ? `'${username}' 님의` : "로딩 중..."}</h2>
-								<h1 className="font-bold text-black text-4xl mb-6">Game Playtime 분석</h1>
-								<img src="/AmigosSittingonChair.png" alt="Person" className="max-w-[350px] h-auto relative left-[-20px]" />
+								<h2 className="font-bold text-black text-3xl mb-2">
+									{username ? `'${username}' 님의` : "로딩 중..."}
+								</h2>
+								<h1 className="font-bold text-black text-4xl mb-6">
+									Game Playtime 분석
+								</h1>
+								<img
+									src="/AmigosSittingonChair.png"
+									alt="Person"
+									className="max-w-[350px] h-auto relative left-[-20px]"
+								/>
 							</div>
 						</div>
 
@@ -195,7 +233,6 @@ export default function ProfileTemp(): JSX.Element {
 								className="absolute top-[-20px] right-[-100px] w-[400px] h-auto z-0"
 							/>
 
-							
 							<div className="relative w-[500px] h-[500px] p-6 z-10 overflow-visible -ml-[240px]">
 								<div className="w-full h-full flex items-center justify-center overflow-visible">
 									{loading ? (
@@ -219,7 +256,8 @@ export default function ProfileTemp(): JSX.Element {
 						</h2>
 
 						<p className="font-bold text-black text-3xl leading-[60px] mb-16 text-center md:text-left">
-							최근에는 {recentGenre ? `${recentGenre} 장르를` : "다양한 장르를"} 주로 즐겨하셨군요!
+							최근에는 {recentGenre ? `${recentGenre} 장르를` : "다양한 장르를"}{" "}
+							주로 즐겨하셨군요!
 						</p>
 
 						<div className="flex justify-center md:justify-start mb-16">
@@ -229,7 +267,10 @@ export default function ProfileTemp(): JSX.Element {
 									window.location.href = "http://localhost:5173/trend";
 								}}
 							>
-								→ {recentGenre ? `다른 ${recentGenre} 게임 추천 받기` : "다른 게임 추천 받기"}
+								→{" "}
+								{recentGenre
+									? `다른 ${recentGenre} 게임 추천 받기`
+									: "다른 게임 추천 받기"}
 							</Button>
 						</div>
 
@@ -273,7 +314,8 @@ export default function ProfileTemp(): JSX.Element {
 							<Button
 								className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px] px-8"
 								onClick={() => {
-									window.location.href = "http://localhost:5173/recommendations";
+									window.location.href =
+										"http://localhost:5173/recommendations";
 								}}
 							>
 								→ AI로 나에게 맞는 게임 추천 받기
