@@ -1,0 +1,45 @@
+import axios from "./axios";
+import { OwnedGame, RecentlyPlayedGame, SteamProfile } from "../types/Steam";
+interface RawGame {
+	steam_appid: number;
+	name: string;
+	header_image: string;
+	short_description: string;
+	price_overview?: {
+		final_formatted: string;
+	};
+}
+
+export const fetchSteamProfile = async () => {
+	const response = await axios.get("/steam/user/me");
+	return response.data;
+};
+
+export const fetchProfile = async (): Promise<SteamProfile> => {
+	const res = await axios.get("/steam/user/me");
+	return res.data;
+};
+
+export const fetchOwnedGames = async (): Promise<OwnedGame[]> => {
+	const res = await axios.get("/steam/user/me/games");
+	if (Array.isArray(res.data)) return res.data;
+	console.error("❌ API 응답이 배열이 아닙니다:", res.data);
+	return [];
+};
+
+export const fetchRecentGames = async (): Promise<RecentlyPlayedGame[]> => {
+	const res = await axios.get("/steam/user/me/recent-games");
+	return res.data;
+};
+
+export async function fetchRecommendedGames(
+	appIds: string[]
+): Promise<RawGame[]> {
+	const response = await axios.post("/recommendation/details", { appIds });
+	return response.data;
+}
+
+export async function fetchGameReviews(appId: string) {
+	const response = await axios.get(`/review/${appId}`);
+	return response.data;
+}

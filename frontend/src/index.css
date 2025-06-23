@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+body {
+	@apply bg-white text-gray-900 dark:bg-gray-900 dark:text-white;
+	@apply font-sans leading-relaxed;
+}
+/* index.css */
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
