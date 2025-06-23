@@ -1,5 +1,14 @@
 import axios from "./axios";
 import { OwnedGame, RecentlyPlayedGame, SteamProfile } from "../types/Steam";
+interface RawGame {
+	steam_appid: number;
+	name: string;
+	header_image: string;
+	short_description: string;
+	price_overview?: {
+		final_formatted: string;
+	};
+}
 
 export const fetchSteamProfile = async () => {
 	const response = await axios.get("/steam/user/me");
@@ -23,7 +32,9 @@ export const fetchRecentGames = async (): Promise<RecentlyPlayedGame[]> => {
 	return res.data;
 };
 
-export async function fetchRecommendedGames(appIds: string[]) {
+export async function fetchRecommendedGames(
+	appIds: string[]
+): Promise<RawGame[]> {
 	const response = await axios.post("/recommendation/details", { appIds });
 	return response.data;
 }
