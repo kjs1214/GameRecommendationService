@@ -5,7 +5,8 @@ import GameRecommendationPage from "./pages/GameRecommendationPage";
 import LoginSuccessPage from "./pages/LoginSuccessPage";
 import GameTrendPage from "./pages/GameTrendPage";
 import "./index.css";
-import axios from "./api/axios"; // ✅ axios 인스턴스 import
+import axios from "./api/axios";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
 	const [checkingAuth, setCheckingAuth] = useState(true);
@@ -43,6 +44,7 @@ function App() {
 			<Route path="/recommendations" element={<GameRecommendationPage />} />
 			<Route path="/trend" element={<GameTrendPage />} />
 			<Route path="/login/success" element={<LoginSuccessPage />} />
+			<Route path="/profile" element={<ProfilePage />} />
 		</Routes>
 	);
 }
