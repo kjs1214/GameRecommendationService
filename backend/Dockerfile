@@ -3,7 +3,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY . .
 
-RUN ./gradlew build
+RUN ./gradlew build --no-daemon
 
 EXPOSE 8080
 
