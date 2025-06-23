@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 "/error",
                                 "/favicon.ico",
                                 "/css/**", "/js/**", "/images/**",
-                                "/api/review/**"
+                                "/api/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

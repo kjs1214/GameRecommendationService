@@ -21,8 +21,7 @@ export default function GameRecommendationPage() {
 	useEffect(() => {
 		const loadGames = async () => {
 			try {
-				const token = localStorage.getItem("token") ?? "";
-				const result = await fetchRecommendedGames(appIds, token);
+				const result = await fetchRecommendedGames(appIds); // ✅ token 제거
 				setGames(result);
 			} catch (err) {
 				console.error(err);
