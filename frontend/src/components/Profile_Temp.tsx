@@ -266,7 +266,7 @@ export default function ProfileTemp(): JSX.Element {
               <Button
                 className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px] px-8"
                 onClick={() => {
-                  window.location.href = "http://localhost:5173/recommend";
+                  window.location.href = "http://localhost:5173/recommendations";
                 }}
               >
                 → AI로 나에게 맞는 게임 추천 받기
