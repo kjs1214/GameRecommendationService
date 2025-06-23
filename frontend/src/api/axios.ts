@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-	baseURL: "http://localhost:8080/api",
+	baseURL: "https://gamerecommendationservice.onrender.com",
 });
 
 // 요청 인터셉터: 매 요청마다 토큰 자동 추가

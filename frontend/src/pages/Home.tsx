@@ -35,7 +35,8 @@ export default function Home({ userInfo }: Props) {
 				) : (
 					<button
 						onClick={() =>
-							(window.location.href = "http://localhost:8080/login/steam")
+							(window.location.href =
+								"https://gamerecommendationservice.onrender.com/login/steam")
 						}
 						className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
 					>
