@@ -7,10 +7,21 @@ export default defineConfig({
 	server: {
 		proxy: {
 			"/api": {
-				target: "http://localhost:8080", // 백엔드 주소
+				target: "https://gamerecommendationservice.onrender.com",
 				changeOrigin: true,
 				secure: false,
 			},
 		},
+	},
+	resolve: {
+		alias: {
+			"@": "/src",
+		},
+	},
+	build: {
+		outDir: "dist",
+	},
+	preview: {
+		port: 4173,
 	},
 });

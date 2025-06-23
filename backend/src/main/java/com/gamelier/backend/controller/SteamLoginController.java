@@ -41,8 +41,8 @@ public class SteamLoginController {
                 .fromUriString("https://steamcommunity.com/openid/login")
                 .queryParam("openid.ns", "http://specs.openid.net/auth/2.0")
                 .queryParam("openid.mode", "checkid_setup")
-                .queryParam("openid.return_to", "http://localhost:8080/login/steam/callback")
-                .queryParam("openid.realm", "http://localhost:8080")
+                .queryParam("openid.return_to", "https://gamerecommendationservice.onrender.com/login/steam/callback") // 백엔드 주소!
+                .queryParam("openid.realm", "https://gamerecommendationservice.onrender.com") // 백엔드 주소!
                 .queryParam("openid.identity", "http://specs.openid.net/auth/2.0/identifier_select")
                 .queryParam("openid.claimed_id", "http://specs.openid.net/auth/2.0/identifier_select")
                 .build().toUriString();
@@ -68,14 +68,14 @@ public class SteamLoginController {
                     .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
 
-
             // 게임 데이터 저장
             steamGameService.fetchAndSaveOwnedGames(steamId);
 
-            // 프론트엔드로 리다이렉트 (token은 URL에 전달됨)
-            return new RedirectView("http://localhost:5173/login/success?token=" + token);
+            // 🔁 프론트 주소로 리다이렉트
+            return new RedirectView("https://gamerecommendationservice.vercel.app/login/success?token=" + token);
         }
 
         return new RedirectView("/login/failure");
     }
+
 }
