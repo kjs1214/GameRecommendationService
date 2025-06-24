@@ -1,4 +1,3 @@
-// GameRecommendationPage.tsx
 import React, { useEffect, useState } from "react";
 import GameDetailCard from "../components/GameDetailCard";
 import { fetchProfile, fetchRecommendedGames } from "../api/steam";
@@ -8,6 +7,7 @@ interface Game {
 	name: string;
 	header_image: string;
 	short_description: string;
+	summary: string;
 	price_overview?: { final_formatted: string };
 }
 
@@ -19,14 +19,11 @@ export default function GameRecommendationPage() {
 	useEffect(() => {
 		const load = async () => {
 			try {
-				const token = localStorage.getItem("token") ?? "";
-				const appIds = ["10", "730", "440", "570", "550"];
+				const profile = await fetchProfile();
+				const steamid = profile.steamid;
+				const apikey = import.meta.env.VITE_STEAM_API_KEY;
 
-				// 프로필과 추천 게임을 병렬로 가져오기
-				const [profile, recommended] = await Promise.all([
-					fetchProfile(),
-					fetchRecommendedGames(appIds),
-				]);
+				const recommended = await fetchRecommendedGames(steamid, apikey);
 
 				setUsername(profile.personaname);
 				setGames(recommended);
@@ -58,7 +55,6 @@ export default function GameRecommendationPage() {
 
 	return (
 		<div className="px-6 py-8">
-			{/* Hero Header: 한 번만 */}
 			<div className="mb-8 text-center">
 				<h2 className="text-lg text-gray-400">
 					{username ? `${username}님을 위한 게임 추천` : "로딩 중..."}
@@ -66,7 +62,6 @@ export default function GameRecommendationPage() {
 				<h1 className="text-3xl font-bold text-white">GAMELIER&apos;s PICK</h1>
 			</div>
 
-			{/* 게임 카드 리스트 */}
 			<div className="space-y-8">
 				{games.map((game) => (
 					<GameDetailCard key={game.steam_appid} game={game} />
