@@ -118,7 +118,7 @@ def predict_with_model(user_games, mlb):
         return np.zeros(len(user_games))  # 예측 실패 시 0값 반환
 
 
-def hybrid_recommendation(user_games, games_df, mlb, alpha=0.5, top_n=10):
+def hybrid_recommendation(user_games, games_df, mlb, alpha=0.5, top_n=6):
     # 1. 장르 점수 계산
     genre_scores = compute_genre_score(user_games, games_df, mlb)
     
@@ -127,24 +127,24 @@ def hybrid_recommendation(user_games, games_df, mlb, alpha=0.5, top_n=10):
 
     # model_scores_proba가 1D 배열일 경우 바로 사용
     if model_scores_proba.ndim == 2:
-        model_scores = model_scores_proba[:, 1]  # 클래스 1에 대한 확률만 추출
+        model_scores = model_scores_proba[:, 1]  
     else:
-        model_scores = model_scores_proba  # 1D 배열이면 그대로 사용
+        model_scores = model_scores_proba  
 
     # 3. model_scores 배열을 전체 게임 수에 맞게 확장
-    model_scores_full = np.zeros(len(games_df))  # 전체 게임 수에 맞는 배열
-    recommended_game_ids = [g["gameid"] for g in user_games]  # 'appid' 대신 'gameid' 사용
+    model_scores_full = np.zeros(len(games_df))  
+    recommended_game_ids = [g["gameid"] for g in user_games]  
 
     recommended_scores = np.array(model_scores)  # 모델 예측 확률
 
     # 추천된 게임의 인덱스를 찾아서 확장된 model_scores_full에 할당
     for idx, game_id in enumerate(recommended_game_ids):
-        game_id_str = str(game_id)  # game_id를 str로 변환하여 일치시킴
+        game_id_str = str(game_id)  
 
         # game_id에 해당하는 인덱스를 찾기
         game_idx = games_df[games_df["gameid"] == game_id_str].index
 
-        if game_idx.empty:  # 게임이 없다면
+        if game_idx.empty:  
             print(f"[SKIP] Game ID {game_id_str} not found in games_df. Finding similar game...")
             
             # 장르 벡터가 유사한 게임을 찾아서 대체
@@ -155,7 +155,6 @@ def hybrid_recommendation(user_games, games_df, mlb, alpha=0.5, top_n=10):
             
         model_scores_full[game_idx[0]] = recommended_scores[idx]
 
-    # 4. 장르 점수와 모델 예측값 결합
     hybrid_scores = alpha * genre_scores + (1 - alpha) * model_scores_full
     sorted_idx = np.argsort(hybrid_scores)[::-1]  # 추천된 게임들을 정렬
     

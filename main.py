@@ -19,9 +19,9 @@ if __name__ == "__main__":
     user_data = get_user_game_data(steam_api_key, steam_id)
 
     # 4. 수집한 유저 게임에 장르 정보 추가
-    enriched_data = enrich_user_games_with_genres(user_data[:10])  # 상위 10개만 테스트
+    enriched_data = enrich_user_games_with_genres(user_data[:10])  
 
-    recommendations = hybrid_recommendation(enriched_data, games_df, mlb, alpha=0.5, top_n=10)
+    recommendations = hybrid_recommendation(enriched_data, games_df, mlb, alpha=0.5, top_n=6)
 
     user_vector_df = pd.read_csv("user_game_genre_vectorized2.csv")
     genre_cols = [col for col in games_df.columns if col not in ['gameid', 'title', 'genres']]
