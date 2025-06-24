@@ -41,7 +41,8 @@ def summarize_reviews(reviews):
     input_text = "summarize: " + text
 
 
-    summarizer = pipeline("summarization", model="t5-small", tokenizer="t5-small")
+    summarizer = pipeline("summarization", model="t5-small", tokenizer="t5-small", device=-1)
+
     summary = summarizer(input_text, max_length=50, min_length=10, do_sample=False)
     return summary[0]['summary_text']
 

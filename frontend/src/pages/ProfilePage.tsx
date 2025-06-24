@@ -5,37 +5,10 @@ import { fetchOwnedGames, fetchProfile, fetchRecentGames } from "../api/steam";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Separator } from "../components/ui/separator";
+import { Home } from "lucide-react";
 import type { JSX } from "react";
 import type { OwnedGame } from "../types/Steam";
 
-/*const topGames = [
-  {
-	name: "1. 배틀그라운드",
-	bgClass: "bg-gradient-to-r from-[#ff7b7b] to-[#e08787]",
-	width: "w-full",
-  },
-  {
-	name: "2. Stardew Valley",
-	bgClass: "bg-gradient-to-r from-[#d9ffbb] to-[#78c872]",
-	width: "w-[90%]",
-  },
-  {
-	name: "3. Dark Souls 3",
-	bgClass: "bg-gradient-to-r from-[#d9ffbb] to-[#78c872]",
-	width: "w-[68%]",
-  },
-  {
-	name: "4. Moster Hunter: World",
-	bgClass: "bg-gradient-to-r from-[#fffebb] to-[#ebe58d]",
-	width: "w-[59%]",
-  },
-  {
-	name: "5. Portal 2",
-	bgClass: "bg-gradient-to-r from-[#fffebb] to-[#ebe58d]",
-	width: "w-[33%]",
-  },
-];
-*/
 export default function ProfileTemp(): JSX.Element {
 	const [games, setGames] = useState<OwnedGame[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -111,10 +84,9 @@ export default function ProfileTemp(): JSX.Element {
 		});
 
 		const sorted = Array.from(map.entries()).sort((a, b) => b[1] - a[1]);
-		return sorted[0]?.[0] || null; // 가장 많은 장르
+		return sorted[0]?.[0] || null;
 	}, [recentGames]);
 
-	// Steam 보유 게임 데이터 로드
 	useEffect(() => {
 		const load = async () => {
 			try {
@@ -125,7 +97,6 @@ export default function ProfileTemp(): JSX.Element {
 				setUsername(profile.personaname);
 
 				const recent = await fetchRecentGames();
-
 				const converted = recent.map((g) => ({ ...g, genre: [] }));
 				setRecentGames(converted);
 			} catch (err) {
@@ -140,12 +111,10 @@ export default function ProfileTemp(): JSX.Element {
 	const topGames = useMemo(() => {
 		if (!games || games.length === 0) return [];
 
-		// 플레이타임 기준 내림차순 정렬 후 상위 5개
 		const sorted = [...games]
 			.sort((a, b) => b.playtimeForever - a.playtimeForever)
 			.slice(0, 5);
 
-		// 게임별 배경색 및 너비
 		const bgClasses = [
 			"bg-gradient-to-r from-[#ff7b7b] to-[#e08787]",
 			"bg-gradient-to-r from-[#d9ffbb] to-[#78c872]",
@@ -163,7 +132,6 @@ export default function ProfileTemp(): JSX.Element {
 		}));
 	}, [games]);
 
-	// 장르별 플레이타임 합산 -> Donut 차트용 데이터
 	const genreData = useMemo(() => {
 		const map = new Map<string, number>();
 		games.forEach((g: any) => {
@@ -180,13 +148,14 @@ export default function ProfileTemp(): JSX.Element {
 			<div
 				className="w-full min-h-screen relative overflow-x-hidden"
 				style={{
-					background:
-						"linear-gradient(180deg, rgba(237,239,247,1) 0%, rgba(130,52,255,1) 100%)",
+					background: "linear-gradient(180deg, #e0e7ff 0%, #d8b4fe 100%)",
 				}}
 			>
-				{/* Header */}
 				<header className="w-full h-[72px] bg-[#edeff7] relative">
-					<div className="container mx-auto px-4 h-full flex items-center justify-center">
+					<div className="container mx-auto px-4 h-full flex items-center justify-center relative">
+						<a href="/" className="absolute right-4">
+							<Home className="w-8 h-8 text-black hover:text-purple-500" />
+						</a>
 						<img
 							src="/GameRogo.png"
 							alt="Game logo"
@@ -198,17 +167,9 @@ export default function ProfileTemp(): JSX.Element {
 					</div>
 					<Separator className="w-full h-[3px]" />
 				</header>
-
-				{/* Hero Section */}
 				<section className="container mx-auto px-4 mt-16 relative">
 					<div className="flex flex-col md:flex-row items-center gap-8">
-						{/* 왼쪽 텍스트+이미지 */}
-						<div className="w-full md:w-1/2 relative flex justify-start ml-[-20px]">
-							<img
-								src="/Vector2.png"
-								alt="Vector bg"
-								className="absolute top-0 left-0 w-[400px] h-auto z-0"
-							/>
+						<div className="w-full md:w-1/2 relative flex justify-start">
 							<div className="relative z-10 pl-4">
 								<h2 className="font-bold text-black text-3xl mb-2">
 									{username ? `'${username}' 님의` : "로딩 중..."}
@@ -219,98 +180,94 @@ export default function ProfileTemp(): JSX.Element {
 								<img
 									src="/AmigosSittingonChair.png"
 									alt="Person"
-									className="max-w-[350px] h-auto relative left-[-20px]"
+									className="max-w-[350px] h-auto"
 								/>
 							</div>
 						</div>
-
-						{/* 오른쪽 Donut 차트 영역 */}
-						<div className="w-full md:w-1/2 relative flex justify-start">
-							{/* Vector3는 부모 기준으로 절대 위치 */}
-							<img
-								src="/Vector3.png"
-								alt="Vector3"
-								className="absolute top-[-20px] right-[-100px] w-[400px] h-auto z-0"
-							/>
-
-							<div className="relative w-[500px] h-[500px] p-6 z-10 overflow-visible -ml-[240px]">
-								<div className="w-full h-full flex items-center justify-center overflow-visible">
-									{loading ? (
-										<p>Loading chart...</p>
-									) : (
-										<GenreDonutChart data={genreData} />
-									)}
-								</div>
+						<div className="w-full md:w-1/2 flex justify-center">
+							<div className="relative w-[400px] h-[400px] p-6 z-10">
+								{loading ? (
+									<p>Loading chart...</p>
+								) : (
+									<GenreDonutChart data={genreData} />
+								)}
 							</div>
 						</div>
 					</div>
 				</section>
-
-				{/* ───────────────── Profile Analysis Section (아래 부분) ───────────────── */}
+				{/* ───────────────── Profile Analysis Section (아래 부분) ───────────────── */}{" "}
 				<section className="container mx-auto px-4 mt-32">
+					{" "}
 					<div className="max-w-[1458px] mx-auto">
+						{" "}
 						<h2 className="font-bold text-black text-3xl leading-[60px] mb-8 text-center md:text-left">
-							{username ? `'${username}' 님의` : "로딩 중..."}
-							<br />
-							프로필 분석 결과는 다음과 같아요
-						</h2>
-
+							{" "}
+							{username ? `'${username}' 님의` : "로딩 중..."} <br /> 프로필
+							분석 결과는 다음과 같아요{" "}
+						</h2>{" "}
 						<p className="font-bold text-black text-3xl leading-[60px] mb-16 text-center md:text-left">
-							최근에는 {recentGenre ? `${recentGenre} 장르를` : "다양한 장르를"}{" "}
-							주로 즐겨하셨군요!
-						</p>
-
+							{" "}
+							최근에는 {recentGenre
+								? `${recentGenre} 장르를`
+								: "다양한 장르를"}{" "}
+							주로 즐겨하셨군요!{" "}
+						</p>{" "}
 						<div className="flex justify-center md:justify-start mb-16">
+							{" "}
 							<Button
 								className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px] px-8"
 								onClick={() => {
 									window.location.href = "http://localhost:5173/trend";
 								}}
 							>
+								{" "}
 								→{" "}
 								{recentGenre
 									? `다른 ${recentGenre} 게임 추천 받기`
-									: "다른 게임 추천 받기"}
-							</Button>
-						</div>
-
+									: "다른 게임 추천 받기"}{" "}
+							</Button>{" "}
+						</div>{" "}
 						<h2 className="font-bold text-black text-3xl leading-[60px] mb-8 text-center md:text-left">
-							내가 가장 많이 플레이한 게임 TOP 5
-						</h2>
-
+							{" "}
+							내가 가장 많이 플레이한 게임 TOP 5{" "}
+						</h2>{" "}
 						<Card className="bg-white rounded-[5px] mb-16">
+							{" "}
 							<CardContent className="p-0">
+								{" "}
 								{topGames.map((game, index) => (
 									<div
 										key={index}
 										className={`${game.bgClass} h-[100px] ${game.width} rounded-[5px] flex items-center pl-4 mb-0`}
 									>
+										{" "}
 										<h3 className="font-bold text-black text-3xl leading-[42px]">
-											{game.name}
-										</h3>
+											{" "}
+											{game.name}{" "}
+										</h3>{" "}
 									</div>
-								))}
-							</CardContent>
-						</Card>
-
+								))}{" "}
+							</CardContent>{" "}
+						</Card>{" "}
 						<h2 className="font-bold text-black text-3xl leading-[60px] mb-4 text-center md:text-left">
-							종합적으로 당신의 유형은...
-						</h2>
-
+							{" "}
+							종합적으로 당신의 유형은...{" "}
+						</h2>{" "}
 						<p className="font-bold text-black text-3xl leading-[60px] mb-2 text-center md:text-left">
-							{"{" + playType.type + "}"} 입니다
-						</p>
-
+							{" "}
+							{"{" + playType.type + "}"} 입니다{" "}
+						</p>{" "}
 						<p className="font-bold text-black text-3xl leading-[60px] mb-16 text-center md:text-left">
-							{playType.description}
-						</p>
-
+							{" "}
+							{playType.description}{" "}
+						</p>{" "}
 						<p className="font-bold text-black text-3xl leading-[60px] mb-8 text-center md:text-left">
-							GAMLIER에서 당신의 유형과 성향에 맞는 게임을 추천해드리고 있어요.
-							<br />한 번 보러 가볼까요?
-						</p>
-
+							{" "}
+							GAMLIER에서 당신의 유형과 성향에 맞는 게임을 추천해드리고 있어요.{" "}
+							<br />한 번 보러 가볼까요?{" "}
+						</p>{" "}
 						<div className="flex justify-center md:justify-start">
+							{" "}
 							<Button
 								className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px] px-8"
 								onClick={() => {
@@ -318,10 +275,11 @@ export default function ProfileTemp(): JSX.Element {
 										"http://localhost:5173/recommendations";
 								}}
 							>
-								→ AI로 나에게 맞는 게임 추천 받기
-							</Button>
-						</div>
-					</div>
+								{" "}
+								→ AI로 나에게 맞는 게임 추천 받기{" "}
+							</Button>{" "}
+						</div>{" "}
+					</div>{" "}
 				</section>
 			</div>
 		</div>

@@ -1,6 +1,8 @@
+// GameRecommendationPage.tsx
 import React, { useEffect, useState } from "react";
 import GameDetailCard from "../components/GameDetailCard";
 import { fetchProfile, fetchRecommendedGames } from "../api/steam";
+import { Home } from "lucide-react";
 
 interface Game {
 	steam_appid: number;
@@ -11,19 +13,35 @@ interface Game {
 	price_overview?: { final_formatted: string };
 }
 
+const cachedRecommendedGames: {
+	username: string | null;
+	games: Game[];
+} = {
+	username: null,
+	games: [],
+};
+
 export default function GameRecommendationPage() {
-	const [username, setUsername] = useState<string | null>(null);
-	const [games, setGames] = useState<Game[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [username, setUsername] = useState<string | null>(
+		cachedRecommendedGames.username
+	);
+	const [games, setGames] = useState<Game[]>(cachedRecommendedGames.games);
+	const [loading, setLoading] = useState(
+		cachedRecommendedGames.games.length === 0
+	);
 
 	useEffect(() => {
 		const load = async () => {
+			if (cachedRecommendedGames.games.length > 0) return;
+
 			try {
 				const profile = await fetchProfile();
 				const steamid = profile.steamid;
-				const apikey = import.meta.env.VITE_STEAM_API_KEY;
 
-				const recommended = await fetchRecommendedGames(steamid, apikey);
+				const recommended = await fetchRecommendedGames(steamid);
+
+				cachedRecommendedGames.username = profile.personaname;
+				cachedRecommendedGames.games = recommended;
 
 				setUsername(profile.personaname);
 				setGames(recommended);
@@ -55,6 +73,26 @@ export default function GameRecommendationPage() {
 
 	return (
 		<div className="px-6 py-8">
+			{/* Header with home button */}
+			<header className="relative w-full mb-10">
+				<div className="w-full h-[72px] flex items-center justify-center px-6 bg-[#edeff7] relative">
+					<a href="/" className="absolute right-6">
+						<Home className="w-8 h-8 text-black hover:text-orange-500" />
+					</a>
+					<div className="flex items-center">
+						<img
+							src="/GameRogo.png"
+							alt="Gamelier Logo"
+							className="w-16 h-16"
+						/>
+						<h1 className="font-extrabold text-black text-[40px] ml-2">
+							GAMELIER
+						</h1>
+					</div>
+				</div>
+				<div className="w-full h-[3px] bg-black" />
+			</header>
+
 			<div className="mb-8 text-center">
 				<h2 className="text-lg text-gray-400">
 					{username ? `${username}님을 위한 게임 추천` : "로딩 중..."}
