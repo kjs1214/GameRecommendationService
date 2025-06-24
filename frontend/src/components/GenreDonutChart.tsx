@@ -52,7 +52,6 @@ const renderCustomizedLabel = ({
 
 export default function GenreDonutChart({ data }: Props) {
 	const safeData = Array.isArray(data) ? data : [];
-	console.log("도넛 차트에 들어오는 데이터:", safeData);
 
 	// 상위 6개 + 기타 처리
 	const finalData = useMemo(() => {
@@ -66,6 +65,7 @@ export default function GenreDonutChart({ data }: Props) {
 	if (!finalData.length) {
 		return <p className="text-center">차트 데이터가 없습니다.</p>;
 	}
+
 	return (
 		<ResponsiveContainer width={570} height={500}>
 			<PieChart>

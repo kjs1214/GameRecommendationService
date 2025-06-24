@@ -133,15 +133,14 @@ export default function ProfileTemp(): JSX.Element {
 	}, [games]);
 
 	const genreData = useMemo(() => {
-		const map = new Map<string, number>();
-		games.forEach((g: any) => {
-			const genres = g.genres || [];
-			genres.forEach((genre: string) => {
-				map.set(genre, (map.get(genre) || 0) + 1);
-			});
-		});
-		return Array.from(map.entries()).map(([name, value]) => ({ name, value }));
-	}, [games]);
+		return [
+			{ name: "Action", value: 12 },
+			{ name: "RPG", value: 9 },
+			{ name: "Strategy", value: 7 },
+			{ name: "Adventure", value: 5 },
+			{ name: "Simulation", value: 3 },
+		];
+	}, []);
 
 	return (
 		<div className="bg-white flex justify-center w-full">
@@ -215,16 +214,12 @@ export default function ProfileTemp(): JSX.Element {
 						<div className="flex justify-center md:justify-start mb-16">
 							{" "}
 							<Button
-								className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px] px-8"
+								className="bg-[#00cb69] text-black font-extrabold text-xl md:text-3xl h-auto py-4 rounded-[5px] px-8"
 								onClick={() => {
 									window.location.href = "http://localhost:5173/trend";
 								}}
 							>
-								{" "}
-								→{" "}
-								{recentGenre
-									? `다른 ${recentGenre} 게임 추천 받기`
-									: "다른 게임 추천 받기"}{" "}
+								→ 다른 게임 추천 받기
 							</Button>{" "}
 						</div>{" "}
 						<h2 className="font-bold text-black text-3xl leading-[60px] mb-8 text-center md:text-left">
@@ -268,16 +263,17 @@ export default function ProfileTemp(): JSX.Element {
 						</p>{" "}
 						<div className="flex justify-center md:justify-start">
 							{" "}
-							<Button
-								className="bg-[#00cb69] text-black font-extrabold text-4xl h-auto py-4 rounded-[5px] px-8"
-								onClick={() => {
-									window.location.href =
-										"http://localhost:5173/recommendations";
-								}}
-							>
-								{" "}
-								→ AI로 나에게 맞는 게임 추천 받기{" "}
-							</Button>{" "}
+							<div className="flex justify-center md:justify-start mt-16 mb-32">
+								<Button
+									className="bg-[#00cb69] text-black font-extrabold text-xl md:text-3xl h-auto py-4 rounded-[5px] px-8"
+									onClick={() => {
+										window.location.href =
+											"http://localhost:5173/recommendations";
+									}}
+								>
+									→ AI로 나에게 맞는 게임 추천 받기
+								</Button>
+							</div>{" "}
 						</div>{" "}
 					</div>{" "}
 				</section>
