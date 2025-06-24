@@ -1,7 +1,6 @@
 package com.gamelier.backend.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,68 +8,92 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
+import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.Collections;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final SecretKey secretKey;
+    private final String jwtSecret;
 
-    public JwtAuthenticationFilter(String secret) {
-        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return path.startsWith("/login/steam") || path.equals("/") || path.startsWith("/api/review") || path.equals("/favicon.ico");
+    public JwtAuthenticationFilter(String jwtSecret) {
+        this.jwtSecret = jwtSecret;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+                                    FilterChain chain) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String path = request.getRequestURI();
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            try {
-                Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(secretKey)
-                        .build()
-                        .parseClaimsJws(authHeader.substring(7))
-                        .getBody();
-
-                // ✅ claim에서 steamId 꺼냄
-                String steamId = claims.get("steamId", String.class);
-
-                // ✅ 인증 객체 생성 및 등록
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(steamId, null, Collections.emptyList());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                // ✅ request에 steamId 저장
-                request.setAttribute("steamId", steamId);
-
-                filterChain.doFilter(request, response);
-                return;
-
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid token.");
-                return;
-            }
+        if (
+                path.equals("/") ||
+                        path.startsWith("/login/steam") ||
+                        path.equals("/error") ||
+                        path.equals("/favicon.ico") ||
+                        path.startsWith("/css/") ||
+                        path.startsWith("/js/") ||
+                        path.startsWith("/images/")
+        ) {
+            chain.doFilter(request, response);
+            return;
         }
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Missing token.");
+        String token = extractToken(request);
+        if (token == null || !validateToken(token)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String steamId = getUsernameFromToken(token);  // ✅ 실제로는 steamId
+        if (steamId != null) {
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    steamId, null, Collections.emptyList()
+            );
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            // ✅ steamId를 request에 저장
+            request.setAttribute("steamId", steamId);
+        }
+
+        chain.doFilter(request, response);
+    }
+
+    private String extractToken(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        return null;
     }
 
 
-}
+    private boolean validateToken(String token) {
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            System.out.println("❌ JWT 검증 실패: " + e.getMessage());
+            return false;
+        }
+    }
 
+    private String getUsernameFromToken(String token) {
+        try {
+            SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get("steamId", String.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+}

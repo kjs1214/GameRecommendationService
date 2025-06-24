@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
-
+import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
@@ -28,11 +26,11 @@ import java.util.Map;
 public class SteamLoginController {
 
     private final SteamGameService steamGameService;
-    private final SecretKey secretKey;
+    private final String jwtSecret;
 
-    public SteamLoginController(SteamGameService steamGameService, @Value("${jwt.secret}") String secret) {
+    public SteamLoginController(SteamGameService steamGameService, @Value("${jwt.secret}") String jwtSecret) {
         this.steamGameService = steamGameService;
-        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        this.jwtSecret = jwtSecret;
     }
 
     @GetMapping
@@ -49,9 +47,9 @@ public class SteamLoginController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectUrl));
-
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
+
 
     @GetMapping("/callback")
     public RedirectView steamCallback(@RequestParam Map<String, String> params) {
@@ -59,22 +57,22 @@ public class SteamLoginController {
         if (claimedId != null) {
             String steamId = claimedId.substring(claimedId.lastIndexOf("/") + 1);
 
+            SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)); // ✅ 키 생성 통일
+
             String token = Jwts.builder()
                     .setSubject("user")
                     .claim("steamId", steamId)
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                    .signWith(SignatureAlgorithm.HS256, secretKey)
+                    .signWith(key, SignatureAlgorithm.HS256)
                     .compact();
 
             steamGameService.fetchAndSaveOwnedGames(steamId);
 
-            // ✅ 프론트 로컬 주소로 리디렉트
             return new RedirectView("http://localhost:5173/login/success?token=" + token);
         }
 
         return new RedirectView("/login/failure");
     }
-
 
 }

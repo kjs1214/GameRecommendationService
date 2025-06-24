@@ -11,10 +11,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "http://localhost:5173",
-                        "https://gamerecommendationservice.vercel.app"
+                        "https://gamerecommendationservice.vercel.app",
+                        "http://127.0.0.1:5001" // 🔹 Flask 서버 주소 추가
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
+
 }
